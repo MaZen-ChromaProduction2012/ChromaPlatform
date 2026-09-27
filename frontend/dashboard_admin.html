@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم الأدمن — ChromaProduction</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <nav class="border-b border-slate-800 bg-slate-900 px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-red-600 flex items-center justify-center text-white font-bold">CP</div>
+      <span class="font-bold text-lg text-white">لوحة الإدارة والرقابة المركزية</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-xs bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1 rounded-full font-bold">Master Admin</span>
+      <button onclick="logout()" class="text-sm text-red-400 hover:text-red-300 font-bold px-3 py-1.5 rounded-lg border border-red-500/20 hover:bg-red-500/10 transition">خروج</button>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto p-6 space-y-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <span class="text-xs text-slate-400 font-semibold">إجمالي المستخدمين</span>
+        <h3 id="statUsers" class="text-3xl font-extrabold text-white mt-2">...</h3>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <span class="text-xs text-slate-400 font-semibold">إجمالي المشاريع</span>
+        <h3 id="statOrders" class="text-3xl font-extrabold text-blue-400 mt-2">...</h3>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <span class="text-xs text-slate-400 font-semibold">المشاريع النشطة حاليًا</span>
+        <h3 id="statActive" class="text-3xl font-extrabold text-purple-400 mt-2">...</h3>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <span class="text-xs text-slate-400 font-semibold">نظام الإنذارات والحظر</span>
+        <h3 class="text-base font-bold text-emerald-400 mt-2">نشط (3 إنذارات = حظر)</h3>
+      </div>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+      <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+        <i class="fa-solid fa-list-check text-blue-400"></i> مراقبة سير العمل لجميع الطلبات
+      </h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-right text-sm">
+          <thead class="text-xs text-slate-400 bg-slate-800/60 uppercase border-b border-slate-700">
+            <tr>
+              <th class="p-3">رقم الطلب</th>
+              <th class="p-3">المشروع</th>
+              <th class="p-3">العميل</th>
+              <th class="p-3">المونتير</th>
+              <th class="p-3">الحالة</th>
+              <th class="p-3">النسبة</th>
+              <th class="p-3">تاريخ الإنشاء</th>
+            </tr>
+          </thead>
+          <tbody id="adminOrdersTable" class="divide-y divide-slate-800 text-slate-300">
+            <tr><td colspan="7" class="text-center py-6 text-slate-500">جاري جلب البيانات...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    async function checkAuth() {
+      const res = await fetch('/api/auth/current-user');
+      const data = await res.json();
+      if (!data.authenticated || data.user.role !== 'admin') {
+        window.location.href = '/login';
+      }
+    }
+
+    async function loadStats() {
+      const res = await fetch('/api/admin/stats');
+      if (res.ok) {
+        const d = await res.json();
+        document.getElementById('statUsers').textContent = d.total_users;
+        document.getElementById('statOrders').textContent = d.total_orders;
+        document.getElementById('statActive').textContent = d.active_orders;
+      }
+    }
+
+    async function loadAllOrders() {
+      const res = await fetch('/api/orders');
+      if (res.ok) {
+        const d = await res.json();
+        const tbody = document.getElementById('adminOrdersTable');
+        if (d.orders.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="text-center py-6 text-slate-500">لا توجد طلبات مسجلة</td></tr>';
+          return;
+        }
+        tbody.innerHTML = d.orders.map(o => `
+          <tr class="hover:bg-slate-800/30">
+            <td class="p-3 font-mono font-bold text-blue-400">#${o.id}</td>
+            <td class="p-3 font-semibold text-white">${o.title}</td>
+            <td class="p-3">${o.client_name}</td>
+            <td class="p-3">${o.editor_name}</td>
+            <td class="p-3 text-xs text-slate-300">${o.status_text}</td>
+            <td class="p-3 font-bold text-purple-400">${o.progress}%</td>
+            <td class="p-3 text-xs text-slate-500">${o.created_at}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    async function logout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+
+    checkAuth();
+    loadStats();
+    loadAllOrders();
+  </script>
+</body>
+</html>

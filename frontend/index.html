@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة ChromaProduction — المونتاج الذكي المتكامل</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
+
+  <!-- Navbar -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/20">CP</div>
+        <span class="font-extrabold text-xl tracking-tight text-white">Chroma<span class="text-blue-500">Production</span></span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="/login" class="px-4 py-2 rounded-xl text-sm font-bold text-slate-300 hover:text-white transition">تسجيل الدخول</a>
+        <a href="/signup" class="px-5 py-2 rounded-xl text-sm font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition">إنشاء حساب جديد</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="max-w-5xl mx-auto px-6 py-20 text-center flex-1 flex flex-col items-center justify-center">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-semibold mb-6">
+      <i class="fa-solid fa-wand-magic-sparkles"></i> منصة المونتاج الذكي المتكاملة
+    </div>
+    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight text-white max-w-4xl">
+      سلّم الماتريال، تابع تقدم المونتاج ثانية بثانية، واستلم عملك بجودة سينمائية.
+    </h1>
+    <p class="mt-6 text-lg text-slate-400 max-w-2xl leading-relaxed">
+      المنصة الأولى المخصصة لربط صناع المحتوى بمحرري الفيديو المحترفين؛ مدعومة ببوت تيليجرام تفاعلي، ومعالجة ملفات فائقة السرعة بـ C++، وذكاء اصطناعي يرافقك طوال دورة العمل.
+    </p>
+
+    <div class="mt-10 flex flex-wrap gap-4 justify-center">
+      <a href="/signup" class="px-8 py-3.5 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-xl shadow-blue-600/30 transition flex items-center gap-2">
+        <i class="fa-solid fa-rocket"></i> ابدأ مشروعك الآن
+      </a>
+      <a href="/login" class="px-8 py-3.5 rounded-xl font-bold border border-slate-700 bg-slate-900/60 hover:bg-slate-800 text-slate-200 transition flex items-center gap-2">
+        <i class="fa-solid fa-right-to-bracket"></i> دخول المونتير / العميل
+      </a>
+    </div>
+
+    <!-- Feature Pillars -->
+    <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 text-right w-full">
+      <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800">
+        <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+        <h3 class="text-lg font-bold text-white mb-2">رفع فوري للماتريال</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">رفع ملفات الفيديو حتى 250 ميجا، مع إمكانية تنزيلها للمونتير بضغطة زر مضغوطة عبر محرك C++ فائق السرعة.</p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800">
+        <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-4"><i class="fa-brands fa-telegram"></i></div>
+        <h3 class="text-lg font-bold text-white mb-2">بوت تيليجرام المساعد</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">المونتير يحدث حالة المشروع بكلمات طبيعية: 'خلصت التلوين'، والعميل يرى نسبة التقدم في لوحة التحكم لحظيًا.</p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800">
+        <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-shield-halved"></i></div>
+        <h3 class="text-lg font-bold text-white mb-2">إشراف وحماية كاملة</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">لوحة أدمن لمراقبة الشاتات، إدارة التقييمات، نظام إنذارات تلقائي (3 إنذارات = حظر فوري) لضمان بيئة عمل جادة.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 py-6 text-center text-sm text-slate-500">
+    © 2026 ChromaProduction — جميع الحقوق محفوظة
+  </footer>
+</body>
+</html>

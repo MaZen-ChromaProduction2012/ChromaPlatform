@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة العميل — ChromaProduction</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <nav class="border-b border-slate-800 bg-slate-900 px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold">CP</div>
+      <span class="font-bold text-lg text-white">لوحة متابعة المشاريع</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span id="usernameDisplay" class="text-sm text-slate-400 font-semibold"></span>
+      <button onclick="logout()" class="text-sm text-red-400 hover:text-red-300 font-bold px-3 py-1.5 rounded-lg border border-red-500/20 hover:bg-red-500/10 transition">خروج</button>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-1 space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up text-blue-500"></i> طلب مونتاج جديد
+        </h2>
+        <form id="orderForm" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">عنوان المشروع</label>
+            <input type="text" id="orderTitle" required placeholder="مثلاً: ريلز إعلان كافيه" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:outline-none focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">نوع الخدمة</label>
+            <select id="serviceType" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:outline-none focus:border-blue-500">
+              <option value="reels">مونتاج ريلز / تيك توك سريع</option>
+              <option value="youtube">فيديو يوتيوب طويل</option>
+              <option value="commercial">إعلان تجاري سينمائي</option>
+              <option value="color_grading">تصحيح ألوان فقط</option>
+              <option value="motion">موشن جرافيك</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">تفاصيل المطلوب والملاحظات</label>
+            <textarea id="orderDesc" rows="3" required placeholder="اكتب رؤيتك، روابط الموسيقى، أو لينكات درايف إضافية..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:outline-none focus:border-blue-500"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">رفع الماتريال (فيديو / ZIP حتى 250MB)</label>
+            <input type="file" id="orderFile" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer">
+          </div>
+          <button type="submit" id="submitBtn" class="w-full py-3 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition text-sm flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> إرسال الطلب لفريق المونتاج
+          </button>
+        </form>
+      </div>
+
+      <div class="bg-emerald-950/30 border border-emerald-800/40 rounded-2xl p-5 flex items-center justify-between">
+        <div>
+          <h4 class="font-bold text-emerald-400 text-sm">محتاج تتكلم فون أو واتساب؟</h4>
+          <p class="text-xs text-slate-400 mt-0.5">فريق الدعم متاح 24/7 لأي تفاصيل</p>
+        </div>
+        <a href="https://wa.me/message/XP5IUCB56QUFH1" target="_blank" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5">
+          <i class="fa-brands fa-whatsapp text-sm"></i> واتساب
+        </a>
+      </div>
+    </div>
+
+    <div class="lg:col-span-2 space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-bars-progress text-blue-500"></i> مشاريعي الجارية
+          </h2>
+          <button onclick="loadOrders()" class="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 font-semibold">
+            <i class="fa-solid fa-rotate-right"></i> تحديث القائمة
+          </button>
+        </div>
+        <div id="ordersList" class="space-y-4">
+          <p class="text-slate-500 text-sm text-center py-8">جاري تحميل المشاريع...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    async function checkAuth() {
+      const res = await fetch('/api/auth/current-user');
+      const data = await res.json();
+      if (!data.authenticated) window.location.href = '/login';
+      else document.getElementById('usernameDisplay').textContent = 'مرحباً، ' + data.user.username;
+    }
+
+    async function loadOrders() {
+      const res = await fetch('/api/orders');
+      const data = await res.json();
+      const container = document.getElementById('ordersList');
+
+      if (!data.orders || data.orders.length === 0) {
+        container.innerHTML = '<div class="text-center py-10 text-slate-500 text-sm"><i class="fa-solid fa-folder-open text-3xl mb-2 block"></i>لا توجد طلبات سابقة. ابدأ بإرسال أول مشروع لك!</div>';
+        return;
+      }
+
+      container.innerHTML = data.orders.map(o => `
+        <div class="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-3">
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">طلب #${o.id} • ${o.service_type}</span>
+              <h3 class="text-lg font-bold text-white mt-0.5">${o.title}</h3>
+            </div>
+            <span class="text-xs px-2.5 py-1 rounded-full font-bold ${o.progress === 100 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'}">
+              ${o.progress}%
+            </span>
+          </div>
+
+          <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
+            <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" style="width: ${o.progress}%"></div>
+          </div>
+
+          <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+            <div class="flex items-center gap-1.5">
+              <i class="fa-solid fa-spinner fa-spin text-blue-400"></i>
+              <span class="font-medium text-slate-300">${o.status_text}</span>
+            </div>
+            <span>المونتير المسؤول: <strong class="text-slate-200">${o.editor_name}</strong></span>
+          </div>
+
+          ${o.delivered_url ? `
+            <div class="pt-2 border-t border-slate-700/50 flex justify-end">
+              <a href="${o.delivered_url}" target="_blank" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition flex items-center gap-1.5">
+                <i class="fa-solid fa-download"></i> تحميل الفيديو النهائي
+              </a>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('orderForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري الرفع...';
+
+      const formData = new FormData();
+      formData.append('title', document.getElementById('orderTitle').value);
+      formData.append('service_type', document.getElementById('serviceType').value);
+      formData.append('description', document.getElementById('orderDesc').value);
+      const fileInput = document.getElementById('orderFile');
+      if (fileInput.files[0]) formData.append('file', fileInput.files[0]);
+
+      try {
+        const res = await fetch('/api/orders/create', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          alert('تم إرسال الطلب بنجاح! سيتم إخطار فريق المونتاج.');
+          document.getElementById('orderForm').reset();
+          loadOrders();
+        } else alert(data.message || 'حدث خطأ');
+      } catch (err) { alert('خطأ في الاتصال'); }
+      finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> إرسال الطلب لفريق المونتاج';
+      }
+    });
+
+    async function logout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+
+    checkAuth();
+    loadOrders();
+  </script>
+</body>
+</html>
